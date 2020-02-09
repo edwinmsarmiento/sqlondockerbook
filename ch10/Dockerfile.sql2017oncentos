@@ -9,7 +9,7 @@ RUN yum install -y mssql-server
 
 #Step 4
 #Create the /var/opt/mssql/data directory to store the databases
-RUN mkdir -p /var/opt/mssql/data 
+RUN mkdir -p /var/opt/mssql/data
 
 #Recursively change permissions of directories and files inside
 # /var/opt/mssql and /etc/pwd from user to group
