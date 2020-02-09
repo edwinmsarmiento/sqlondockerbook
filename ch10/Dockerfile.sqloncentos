@@ -1,0 +1,25 @@
+#Step 1
+FROM centos:7.6.1810
+
+#Step 2
+RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo
+
+#Step 3
+RUN yum install -y mssql-server
+
+#Step 4
+#Create the /var/opt/mssql/data directory to store the databases
+RUN mkdir -p /var/opt/mssql/data 
+
+#Recursively change permissions of directories and files inside
+# /var/opt/mssql and /etc/pwd from user to group
+RUN chmod -R g=u /var/opt/mssql /etc/passwd
+
+#Tell user what port this container will use
+EXPOSE 1433
+
+#Step 5
+ENV PATH=${PATH}:/opt/mssql/bin
+
+#Step 6
+CMD sqlservr
