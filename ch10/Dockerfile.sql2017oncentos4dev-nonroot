@@ -1,0 +1,18 @@
+#Start from custom SQL Server 2017 on Linux image
+#running as non-root with command line tools
+#NOTE: Use the correct Docker image name
+FROM customsql2017oncentoswithtools-nonroot:v1.0
+
+#Create working directory
+RUN mkdir -p /tmp/startup
+
+#Copy bash scripts into working directory
+# and assign the mssql user as owner
+COPY --chown=mssql:0 . /tmp/startup
+
+#Grant executable permissions to bash scripts
+RUN chmod +x /tmp/startup/checkbackups_restore.sh
+RUN chmod +x /tmp/startup/startup.sh
+
+#Run startup script startup.sh
+CMD ["/tmp/startup/startup.sh"]

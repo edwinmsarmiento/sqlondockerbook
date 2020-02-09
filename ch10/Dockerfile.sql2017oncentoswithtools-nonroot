@@ -1,0 +1,36 @@
+#Step 1
+FROM centos:7.6.1810
+
+#Step 2
+RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo && curl -o /etc/yum.repos.d/msprod.repo https://packages.microsoft.com/config/rhel/7/prod.repo
+
+#Step 3
+RUN ACCEPT_EULA=Y yum install -y mssql-server mssql-tools unixODBC-devel
+
+#Line 10
+RUN useradd -M -s /bin/bash -u 10001 -g 0 mssql
+
+#Modified Line 11
+RUN mkdir -p -m 770 /var/opt/mssql && chown -R mssql:0 /var/opt/mssql && chgrp -R 0 /var/opt/mssql
+
+#Lines 15, 19, and 20
+RUN setcap 'cap_net_bind_service+ep' /opt/mssql/bin/sqlservr
+RUN setcap 'cap_sys_ptrace+ep' /opt/mssql/bin/paldumper
+RUN setcap 'cap_sys_ptrace+ep' /usr/bin/gdb
+
+#Lines 25, 26, and 27
+RUN mkdir -p /etc/ld.so.conf.d && touch /etc/ld.so.conf.d/mssql.conf
+RUN echo -e "# mssql libs\n/opt/mssql/lib" >> /etc/ld.so.conf.d/mssql.conf
+RUN ldconfig
+
+#Tell user what port this container will use
+EXPOSE 1433
+
+#Line 29
+USER mssql
+
+#Step 5
+ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
+
+#Step 6
+CMD sqlservr
