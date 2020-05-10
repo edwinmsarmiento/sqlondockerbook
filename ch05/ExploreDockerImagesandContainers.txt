@@ -1,0 +1,47 @@
+#Exploring the image manifest of the "Hello World" image on Linux
+export DOCKER_CLI_EXPERIMENTAL=enabled
+docker manifest inspect hello-world
+
+#Exploring the image manifest of the SQL Server 2017 with CU14 on Ubuntu Linux image
+export DOCKER_CLI_EXPERIMENTAL=enabled
+docker manifest inspect mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Use the mquery utility in a container to explore the image manifest of the SQL Server 2017 with CU14 on Ubuntu Linux image
+docker run mplatform/mquery mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Exploring the container (not image) manifest of the "Hello World" container on Linux
+docker inspect hello-world
+
+#Exploring the container (not image) manifest of the SQL Server 2017 with CU14 on Ubuntu Linux container
+docker inspect mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Display the storage driver that Docker uses on a Linux host
+docker info | grep -w 'Storage Driver:'
+
+#################################################
+#Explore how the union file system works on Linux
+#Create the following directories - lower, diff, merged, and work
+mkdir lower diff merged work
+
+#Create a file named fileInLower.txt with the provided text
+echo "LOWER: This file is in the LOWER directory" > lower/fileInLower.txt
+
+#Run the Mount command to unify the created directories
+sudo mount -t overlay -o lowerdir=lower,upperdir=diff,workdir=work none merged
+
+#Display the mount created
+mount | grep overlay
+
+#Create a new file in the merged directory.
+echo "MERGED: This file is in the MERGED directory" > merged/fileInMerged.txt
+
+#Display contents of the merged directory
+ls merged
+#################################################
+
+#Traverse the file system layers
+#Run the command below inside the /var/lib/docker/overlay2/ to find the lower directory
+find -maxdepth 1 -type d '!' -exec test -e "{}/lower" ';' -print
+
+#Count the number of “l/” characters in each of the lower files to figure out the sequence of filesystem layers stacked one on top of the other
+find -type f -name "lower" -print0 | xargs -0 grep -o 'l/'
