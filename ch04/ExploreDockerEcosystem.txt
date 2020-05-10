@@ -1,0 +1,41 @@
+#Run Docker's version of "Hello World" on Linux
+docker run hello-world
+
+#Run Docker's version of "Hello World" on Windows Server
+docker run hello-world:nanoserver-sac2016
+
+#Search Docker Hub for images from Microsoft
+docker search microsoft
+
+#Search for SQL Server-related images on Docker Hub with PowerShell on Windows Server
+docker search microsoft | Select-String sql
+
+#Search for SQL Server-related images on Docker Hub on Linux
+docker search microsoft | grep sql
+
+#Run Docker's version of "Hello World" on Windows Server with reference to the complete naming convention
+docker run docker.io/library/hello-world:nanoserver-sac2016
+
+#Run Docker's version of "Hello World" on Linux with reference to the complete naming convention
+docker run docker.io/library/hello-world:latest
+
+#Pull the latest SQL Server on Linux image from Docker Hub
+docker pull docker.io/microsoft/mssql-server-linux:latest
+
+#Pull the latest SQL Server on Linux image from the Microsoft Container Registry
+docker pull mcr.microsoft.com/mssql/server:latest
+
+#Pull and run the SQL Server 2016 Developer Edition on Windows Server image from Docker Hub
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevwincon01 -d -h winsqldev01 microsoft/mssql-server-windows-developer
+
+#Pull and run the SQL Server 2017 with CU14 Developer Edition on Ubuntu Linux image from the Microsoft Container Registry
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon01 -d -h linuxsqldev01 mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Display all running containers
+docker ps
+
+#Create a container from the "Hello World" image on Linux
+docker create hello-world
+
+#Start the created container. Be sure to use the corresponding container ID from the one you created
+docker start -a 3df6324e4c12
