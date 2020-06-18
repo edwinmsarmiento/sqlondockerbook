@@ -36,6 +36,7 @@ This book consists of 11 chapters with an Appendix and is structured in the foll
 - ***Chapter 9*** walks you through building a custom SQL Server on Windows container image that you can use for standardized deployments.
 - ***Chapter 10*** walks you through building a custom SQL Server on Linux container image. 
 - ***Chapter 11*** covers a bit of Docker networking so you can better configure SQL Server on containers for interaction with other applications.
+- ***Appendix A: Building a Personal Lab Environment*** walks you through building a personal lab environment that mimics a real-world, on-premises environment to run Docker containers.
 
 ## Code Samples
 
