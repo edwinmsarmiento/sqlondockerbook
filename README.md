@@ -1,5 +1,5 @@
 # The SQL Server DBA’s Guide to Docker Containers
-** Agile Deployment without Infrastructure Lock-in 1st ed. Edition
+### Agile Deployment without Infrastructure Lock-in 1st ed. Edition
 https://tinyurl.com/SQLonDockerBook
 
 ![Book Cover](./APressBookCover.jpg)
