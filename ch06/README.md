@@ -3,9 +3,10 @@
 The sample code provided allows you to perform operational tasks when working with SQL Server on Docker containers
 
 1.	Starting and stopping containers
-2.	Deleting containers
-3.	Working interactively
-4.	Accessing external files and resources
-5.	Limiting container resources 
+2.                Configure remote access to Docker host
+3.	Deleting containers
+4.	Working interactively
+5.	Accessing external files and resources
+6.	Limiting container resources 
 
 All of the commands are for a Linux Docker host. 
