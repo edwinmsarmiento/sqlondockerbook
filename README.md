@@ -25,17 +25,17 @@ For the intermediate to senior SQL Server DBA who is familiar with SQL Server on
 
 This book consists of 11 chapters with an Appendix and is structured in the following way:
 
-• ***Chapter 1*** introduces you to container technologies, a bit of a history of how it started and how Microsoft adopted it for the Windows Server operating system as well as SQL Server on Linux.
-• ***Chapter 2*** walks you through how to configure a Windows Server operating system as a container host, allowing you to leverage your existing knowledge of Windows.
-• ***Chapter 3*** covers a bit of what you need to know to get started with the Linux operating system in preparation for configuring it to run as a container host.
-• ***Chapter 4*** covers the Docker ecosystem to better understand how container technologies work.
-• ***Chapter 5*** introduces you to Docker images and containers but with a focus on using them with SQL Server.
-• ***Chapter 6*** is where managing and administering containers come in, introducing the most common operational tasks that you need to perform when working with containers.
-• ***Chapter 7*** introduces the concept of persisting data with containers since SQL Server is designed to store and persist data.
-• ***Chapter 8*** covers a bit of working with SQL Server on Linux, the installation and management experience to get you started with administering SQL Server on Linux and, eventually, building custom SQL Server on Linux container images.
-• ***Chapter 9*** walks you through building a custom SQL Server on Windows container image that you can use for standardized deployments.
-• ***Chapter 10*** walks you through building a custom SQL Server on Linux container image. 
-• ***Chapter 11*** covers a bit of Docker networking so you can better configure SQL Server on containers for interaction with other applications.
+- ***Chapter 1*** introduces you to container technologies, a bit of a history of how it started and how Microsoft adopted it for the Windows Server operating system as well as SQL Server on Linux.
+- ***Chapter 2*** walks you through how to configure a Windows Server operating system as a container host, allowing you to leverage your existing knowledge of Windows.
+- ***Chapter 3*** covers a bit of what you need to know to get started with the Linux operating system in preparation for configuring it to run as a container host.
+- ***Chapter 4*** covers the Docker ecosystem to better understand how container technologies work.
+- ***Chapter 5*** introduces you to Docker images and containers but with a focus on using them with SQL Server.
+- ***Chapter 6*** is where managing and administering containers come in, introducing the most common operational tasks that you need to perform when working with containers.
+- ***Chapter 7*** introduces the concept of persisting data with containers since SQL Server is designed to store and persist data.
+- ***Chapter 8*** covers a bit of working with SQL Server on Linux, the installation and management experience to get you started with administering SQL Server on Linux and, eventually, building custom SQL Server on Linux container images.
+- ***Chapter 9*** walks you through building a custom SQL Server on Windows container image that you can use for standardized deployments.
+- ***Chapter 10*** walks you through building a custom SQL Server on Linux container image. 
+- ***Chapter 11*** covers a bit of Docker networking so you can better configure SQL Server on containers for interaction with other applications.
 
 ## Code Samples
 
