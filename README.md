@@ -39,4 +39,4 @@ This book consists of 11 chapters with an Appendix and is structured in the foll
 
 ## Code Samples
 
-Code samples for the APress book SQL Server DBA's Guide to Docker Containers
+The code samples for this book are available through scripts in folders arranged on a per-chapter basis. 
