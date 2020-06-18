@@ -1,0 +1,177 @@
+#Chapter 6: Managing and Administering Containers
+
+#Enable experimental features in the Docker daemon using the dockerd command
+#The Docker daemon should be in a stopped state before running this command
+sudo dockerd -experimental
+
+#Stop the Docker daemon
+sudo systemctl stop docker
+
+#Start the Docker daemon
+sudo systemctl start docker
+
+#Restart the Docker daemon
+sudo systemctl restart docker
+
+#######################
+#Configure remote access to the Docker daemon with the systemd unit file
+
+#Create an override file for the Docker daemon using the default text editor on Linux
+sudo systemctl edit docker.service
+
+
+#Add content below on override file and save
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://<IP address or hostname of CentOS Docker host>:2376
+
+#Reload the systemd unit file
+sudo systemctl daemon-reload
+
+#Restart the Docker daemon
+sudo systemctl restart docker
+
+#######################
+#Protect the Docker daemon socket by configuring mutual TLS encryption
+
+#Run these commands on the CentOS Docker host
+#Create a temporary directory to store the CA private and public keys
+mkdir /tmp/dockerTLS
+cd /tmp/dockerTLS
+
+#Create the CA private key
+openssl genrsa -aes256 -out ca-key.pem 4096
+
+#Create the CA public key
+openssl req -new -x509 -days 365 -key ca-key.pem -sha256 -out ca.pem
+
+#Create the server key
+openssl genrsa -out server-key.pem 4096
+
+#Create the certificate signing request
+openssl req -subj "/CN=CENTOSDOCKER01.TESTDOMAIN.COM" -sha256 -new -key server-key.pem -out server.csr
+
+#Create an extensions configuration file
+echo subjectAltName = DNS:CENTOSDOCKER01.TESTDOMAIN.COM,IP:172.28.106.158,IP:127.0.0.1 >> extfile.cnf
+
+#Append the extensions configuration file and add the extended usage attributes so that the Docker daemon’s key can only be used for server authentication
+echo extendedKeyUsage = serverAuth >> extfile.cnf
+
+#Sign the public key with the CA and passing it the extensions configuration file
+openssl x509 -req -days 365 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out server-cert.pem -extfile extfile.cnf
+
+
+
+#Run these commands on the Linux client
+#Create a temporary directory to store the CA private and public keys
+mkdir /tmp/dockerTLS
+cd /tmp/dockerTLS
+
+#Create the client key
+openssl genrsa -out key.pem 4096
+
+#Create the certificate signing request
+openssl req -subj '/CN=client' -new -key key.pem -out client.csr
+
+#Create an extensions configuration file to make the client key suitable for client authentication
+echo extendedKeyUsage = clientAuth > extfile-client.cnf
+
+#Copy the ca.pem and ca-key.pem files that you generated on the Docker daemon’s host machine to the /tmp/dockerTLS directory on the client machine
+
+#Generate the signed certificate, passing the public key, private key, and the extensions configuration file
+openssl x509 -req -days 365 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out cert.pem -extfile extfileclient.cnf
+
+Update daemon.json file on CentOS Docker host, add the following:
+"tlscacert": "/tmp/dockerTLS/ca.pem",
+"tlscert": "/tmp/dockerTLS/server-cert.pem",
+"tlskey": "/tmp/dockerTLS/server-key.pem",
+"tlsverify": true
+
+#Restart the Docker daemon.
+sudo systemctl restart docker
+
+#Enable firewall port to allow traffic to Docker daemon
+sudo firewall-cmd --zone=public --add-port=2376/tcp --permanent
+sudo firewall-cmd --reload
+
+#Connect to CentOS Docker host from a remote Linux client
+docker --tlsverify --tlscacert=ca.pem --tlscert=cert.pem --tlskey=key.pem -H=<IP address or hostname of CentOS Docker host>:2376 info
+
+#Set environment variables regarding authenticated Docker remote connection in current session
+export DOCKER_TLS_VERIFY=1
+export DOCKER_HOST=tcp://<IP address or hostname of CentOS Docker host>:2376
+export DOCKER_CERT_PATH=/tmp/dockerTLS/
+
+
+#######################
+#Configure Docker CLI Bash Completion
+#Install the bash auto completion package on Ubuntu
+sudo apt update
+sudo apt install bash-completion
+
+#Install the bash auto completion package on RHEL/CentOS
+sudo yum -y install bash-completion
+
+#Store the Docker completion script in the /etc/bash_completion.d/ directory
+sudo curl https://raw.githubusercontent.com/docker/dockerce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh
+
+#Create SQL Server 2017 with CU14 Linux container without running
+docker create -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon01 -h linuxsqldev01 mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Display all created containers
+docker ps -a -f status=created
+
+#Start container using container name
+docker start sqldevlinuxcon01
+
+#Stop container using container name
+docker stop sqldevlinuxcon01
+
+#Start all containers
+docker start $(docker ps -a -q)
+
+#Stop all containers
+docker stop $(docker ps -a -q)
+
+#Stop container before deleting
+docker stop sqldevlinuxcon01
+
+#Delete container
+docker rm sqldevlinuxcon01
+
+#Delete image that the container is based on
+docker rmi mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Run bash to interact with a running container
+docker exec -it sqldevlinuxcon01 bash
+
+#Run a SQL Server 2017 with CU14 Linux container and mount a local directory to it
+#Create local directory on Linux Docker host
+mkdir /tmp/dbData
+
+#Run container and mount the local directory to it using the -v parameter
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon01 -d -h linuxsqldev01 -v /tmp/dbData:/var/opt/mssql mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Display CPU and memory usage of a running container
+docker stats sqldevlinuxcon01 --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+
+#Create and run a SQL Server 2017 with CU14 Linux container and limit to 2 CPUs and 4GB memory
+docker run -e "ACCEPT_EULA=Y" -e " SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon01 -d -h linuxsqldev01 --cpus="2" --memory=4g mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Reviewing the container logs
+docker logs sqldevlinuxcon01 
+
+#Display status of the Docker daemon
+sudo systemctl status docker -l
+
+#Access all the system events from the systemd journal 
+sudo journalctl
+
+#Access Docker system events from the systemd journal 
+sudo journalctl -u docker
+
+#Displays Docker-related events on a RHEL/CentOS Docker host
+sudo cat /var/log/messages | grep docker
+
+#Displays Docker-related events on a Ubuntu Docker host
+sudo cat /var/log/syslog | grep docker
