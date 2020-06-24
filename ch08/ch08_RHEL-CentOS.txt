@@ -1,0 +1,56 @@
+#Installing SQL Server 2017 on RHEL/CentOS
+#Download the Microsoft SQL Server Red Hat repository configuration file
+sudo curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo
+
+#Install SQL Server on Linux, providing Y as Yes to all installation prompts
+sudo yum install -y mssql-server
+
+#Run mssql-conf to configure SQL Server on Linux
+sudo /opt/mssql/bin/mssql-conf setup
+
+#Enabling the SQL Server daemon to start on system boot
+sudo systemctl enable mssql-server
+
+#####################################
+#Installing SQL Server 2019 on RHEL/CentOS
+#Download the Microsoft SQL Server Red Hat repository configuration file
+sudo curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2019.repo
+
+#Install SQL Server on Linux, providing Y as Yes to all installation prompts
+sudo yum install -y mssql-server
+
+#Run mssql-conf to configure SQL Server on Linux
+sudo /opt/mssql/bin/mssql-conf setup
+
+#Enabling the SQL Server daemon to start on system boot
+sudo systemctl enable mssql-server
+
+#####################################
+#Perform an unattended installation of SQL Server 2017 on RHEL/CentOS
+sudo curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo
+sudo yum install -y mssql-server
+sudo MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='mYSecUr3PAssw0rd' /opt/mssql/bin/mssql-conf setup
+sudo systemctl enable mssql-server
+
+#####################################
+#Perform an unattended installation of SQL Server 2019 on RHEL/CentOS
+sudo curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2019.repo
+sudo yum install -y mssql-server
+sudo MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='mYSecUr3PAssw0rd' /opt/mssql/bin/mssql-conf setup
+sudo systemctl enable mssql-server
+
+#####################################
+#Working with Linux firewall on RHEL/CentOS
+#Display status of FirewallD 
+sudo systemctl status firewalld
+
+#Open port 1433 on FirewallD
+sudo firewall-cmd --zone=public --add-port=1433/tcp --permanent
+
+#Reload the new firewall runtime configuration
+sudo firewall-cmd --reload
+
+#Display runtime configuration of the opened ports in the firewall
+sudo firewall-cmd --list-ports
+
+

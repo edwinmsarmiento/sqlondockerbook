@@ -1,0 +1,66 @@
+#####################################
+#Installing SQL Server 2017 on Ubuntu 16.04 Linux
+#Import the public GPG keys on the local Ubuntu Linux system
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+
+#Add the Microsoft SQL Server Ubuntu repository to the Ubuntu Linux system
+sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/mssql-server-2017 xenial main"
+
+#Update the Ubuntu Linux system
+sudo apt-get update
+
+#Install SQL Server on Linux, providing Y as Yes to all installation prompts
+sudo apt-get install -y mssql-server
+
+#Run mssql-conf to configure SQL Server on Linux
+sudo /opt/mssql/bin/mssql-conf setup
+
+#####################################
+#Installing SQL Server 2019 on Ubuntu 16.04 Linux
+#Import the public GPG keys on the local Ubuntu Linux system
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+
+#Add the Microsoft SQL Server Ubuntu repository to the Ubuntu Linux system
+sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/mssql-server-2019 xenial main"
+
+#Update the Ubuntu Linux system
+sudo apt-get update
+
+#Install SQL Server on Linux, providing Y as Yes to all installation prompts
+sudo apt-get install -y mssql-server
+
+#Run mssql-conf to configure SQL Server on Linux
+sudo /opt/mssql/bin/mssql-conf setup
+
+#####################################
+#Perform an unattended installation of SQL Server 2017 on Ubuntu 16.04 Linux
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/mssql-server-2017 xenial main"
+sudo apt-get update
+sudo apt-get install -y mssql-server
+sudo MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='mYSecUr3PAssw0rd' /opt/mssql/bin/mssql-conf setup
+sudo systemctl enable mssql-server
+
+#####################################
+#Perform an unattended installation of SQL Server 2019 on Ubuntu 16.04 Linux
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/mssql-server-2019 xenial main"
+sudo apt-get update
+sudo apt-get install -y mssql-server
+sudo MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='mYSecUr3PAssw0rd' /opt/mssql/bin/mssql-conf setup
+sudo systemctl enable mssql-server
+
+#####################################
+#Working with Linux firewall on Ubuntu
+#Display status of UFW
+sudo systemctl status ufw
+sudo ufw status
+
+#Enable UFW
+sudo ufw enable
+
+#Allow SSH connections by opening port 22
+sudo ufw allow 22/tcp
+
+#Allow connections to SQL Server by opening port 1433
+sudo ufw allow 1433/tcp

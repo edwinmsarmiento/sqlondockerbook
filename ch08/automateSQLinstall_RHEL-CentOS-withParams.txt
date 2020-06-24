@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# VARIABLES
+MSSQL_SA_PASSWORD=$1
+MSSQL_PID=$2
+
+if [ -z $MSSQL_SA_PASSWORD ]
+then
+	echo Environment variable MSSQL_SA_PASSWORD must be set for unattended install
+exit 1
+fi
+
+if [ -z $MSSQL_PID ]
+then
+	MSSQL_PID=Developer
+fi
+
+sudo curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo
+sudo yum install -y mssql-server
+sudo MSSQL_PID=$MSSQL_PID ACCEPT_EULA=Y MSSQL_SA_PASSWORD=$MSSQL_SA_PASSWORD /opt/mssql/bin/mssql-conf setup
+sudo systemctl enable mssql-server
+
+sudo firewall-cmd --zone=public --add-port=1433/tcp --permanent
+sudo firewall-cmd --reload
+
+sudo /opt/mssql/bin/mssql-conf set sqlagent.enabled true
+
+sudo mkdir /tmp/dbdata
+sudo chown mssql /tmp/dbdata
+sudo chgrp mssql /tmp/dbdata
+sudo /opt/mssql/bin/mssql-conf set filelocation.defaultdatadir /tmp/dbdata
+sudo /opt/mssql/bin/mssql-conf set filelocation.defaultlogdir /tmp/dbdata
+
+sudo mkdir /tmp/dbbackup
+sudo chown mssql /tmp/dbbackup
+sudo chgrp mssql /tmp/dbbackup
+sudo /opt/mssql/bin/mssql-conf set filelocation.defaultbackupdir /tmp/dbbackup
+
+sudo /opt/mssql/bin/mssql-conf traceflag 3226 on
+
+sudo systemctl restart mssql-server

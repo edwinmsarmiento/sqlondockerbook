@@ -1,0 +1,41 @@
+#Create a Docker volume on the Docker host
+docker volume create samplevolume
+
+#Inspect the Docker volume metadata
+docker volume inspect samplevolume
+
+#List all available Docker volumes on the Docker host
+docker volume ls
+
+#Delete a specific Docker volue by name
+docker volume rm samplevolume
+
+#List all subcommands for working with Docker volumes
+docker volume
+
+#Run a container from the centos:7 image and mount the Docker volume to a directory inside the container
+docker run --mount source=samplevolume,target=/tmp/dockervolume -it centos:7
+
+#Run a container from the nanoserver:sac2016 image and mount the Docker volume to a directory inside the container
+docker run -v samplevolume:c:\dockervolume -it microsoft/nanoserver:sac2016 powershell
+
+#Run a SQL Server on Linux container and mount the Docker volume to a directory inside the container
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon01 -d -h linuxsqldev01 --mount source=samplevolume,target=/var/opt/mssql mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Run a SQL Server on Windows container and mount the Docker volume to a directory inside the container
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevwincon01 -d -h winsqldev01 -v samplevolume:C:/dbdata microsoft/mssql-server-windows-developer
+
+###############################################
+#Updating or upgrading SQL Server the smart way
+#Run a SQL Server on Linux container and mount the Docker volume to a directory inside the container
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon01 -d -h linuxsqldev01 --mount source=samplevolume02,target=/var/opt/mssql mcr.microsoft.com/mssql/server:2017-CU14-ubuntu
+
+#Pull the SQL Server on Linux image that contains a more updated version
+docker pull mcr.microsoft.com/mssql/server:2017-CU17-ubuntu
+
+#Stop the SQL Server on Linux container
+docker stop sqldevlinuxcon01
+
+#Create a new SQL Server on Linux container with a new name based on the new SQL Server 2017 image and attach the Docker volume to this new container.
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1433:1433 --name sqldevlinuxcon02 -d -h linuxsqldev01 --mount source=samplevolume02,target=/var/opt/mssql mcr.microsoft.com/mssql/server:2017-CU17-ubuntu
+

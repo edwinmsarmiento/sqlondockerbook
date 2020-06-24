@@ -1,0 +1,42 @@
+#Display usage of mssql-conf
+man mssql-conf
+
+#Display all the different SQL Server on Linux configurable settings
+sudo /opt/mssql/bin/mssql-conf list
+
+#Enable SQL Server Agent on Linux
+sudo /opt/mssql/bin/mssql-conf set sqlagent.enabled true
+
+####################################
+#Configuring default SQL Server data and log directory
+#Create a new directory
+sudo mkdir /tmp/dbdata
+
+#Change the ownership of the directory to the mssql user
+sudo chown mssql /tmp/dbdata
+
+#Change the ownership of the directory to the mssql group
+sudo chgrp mssql /tmp/dbdata
+
+#Configure default SQL Server data and log directory
+sudo /opt/mssql/bin/mssql-conf set filelocation.defaultdatadir /tmp/dbdata
+sudo /opt/mssql/bin/mssql-conf set filelocation.defaultlogdir /tmp/dbdata
+
+####################################
+#Configure default SQL Server backup directory
+sudo mkdir /tmp/dbbackup
+sudo chown mssql /tmp/dbbackup
+sudo chgrp mssql /tmp/dbbackup
+sudo /opt/mssql/bin/mssql-conf set filelocation.defaultbackupdir /tmp/dbbackup
+
+#Enable SQL Server trace flags
+sudo /opt/mssql/bin/mssql-conf traceflag 3226 on 
+
+#Restart SQL Server
+sudo systemctl restart mssql-server
+
+#View all instance-level configuration
+sudo cat /var/opt/mssql/mssql.conf
+
+#Validate instance-level configuration file
+sudo /opt/mssql/bin/mssql-conf validate
