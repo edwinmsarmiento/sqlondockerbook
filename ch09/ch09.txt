@@ -1,0 +1,26 @@
+#Using the docker commit command to persist changes to a container and save it as an image
+#Run this command on Linux
+docker commit sqldevlinuxcon01 sqlserver2017-cu18-ubuntu-16.04-with-dbs:v2.0
+
+#Using the custom image built with docker commit
+#Run this command on Linux
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=mYSecUr3PAssw0rd" -p 1413:1433 --name sqldevlinuxcon03 -d -h linuxsqldev01 sqlserver2017-cu18-ubuntu-16.04-with-dbs:v2.0
+
+#Build custom SQL Server on Windows Docker image with the Dockerfile
+#Run this command on Windows
+docker build -t sql2016windev:v1.0 .
+
+#Using the newly built custom image to run a container
+#Run this command on Windows
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=y0urSecUr3PAssw0rd' -p 1433:1433 --name sql-windevcon01 -d -h windevsql01 sql2016windev:v1.0
+
+
+#Build a custom SQL Server on Linux Docker image from a Dockerfile on GitHub
+#Run this command on Linux
+docker build -t sql2017linuxnonroot:v1.0 https://raw.githubusercontent.com/microsoft/mssql-docker/master/linux/preview/examples/mssql-server-linux-non-root/Dockerfile
+                                                                        
+#Remove all images that are not tagged nor referenced by any container
+docker image prune
+
+#Delete stopped containers
+docker container prune

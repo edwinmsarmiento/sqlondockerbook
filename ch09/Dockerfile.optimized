@@ -1,0 +1,17 @@
+#Step 1
+FROM mcr.microsoft.com/windows/servercore:10.0.14393.2972
+
+#Step 1A – switch the default command shell to PowerShell
+SHELL ["powershell", "-Command"]
+
+#Step 2
+RUN mkdir C:/SQL2016Dev_SP2
+
+#Step 3
+COPY /SQL2016Dev_SP2 C:/SQL2016Dev_SP2
+
+#Step 4 and 6 combined in a single line
+RUN C:/SQL2016Dev_SP2/SETUP.exe /Q /ACTION=INSTALL /UPDATEENABLED=True /UPDATESOURCE=./SQLServer2016SP2CU11 /FEATURES=SQLENGINE /INSTANCENAME=MSSQLSERVER /SECURITYMODE=SQL /SAPWD='y0urSecUr3PAssw0rd' /SQLSVCACCOUNT='NT AUTHORITY\System' /AGTSVCACCOUNT='NT AUTHORITY\System' /SQLSYSADMINACCOUNTS='BUILTIN\Administrators' /IACCEPTSQLSERVERLICENSETERMS=1 /TCPENABLED=1 /SQLSVCSTARTUPTYPE='Automatic' ; Remove-Item -Path C:/SQL2016Dev_SP2 -Recurse -Force
+
+#New Step 10
+ENTRYPOINT ["C:/Program Files/Microsoft SQL Server/MSSQL13.MSSQLSERVER/MSSQL/Binn/sqlservr.exe"]

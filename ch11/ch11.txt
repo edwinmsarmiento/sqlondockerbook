@@ -1,0 +1,24 @@
+#Display available Docker networks
+docker network ls
+
+#Display detailed information of Docker bridge network
+docker network inspect bridge
+
+#Emulating multiple SQL Server instances
+#Running multiple SQL Server on Linux containers, each one using a specific port number  
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=y0urSecUr3PAssw0rd' -p 1433:1433 --name sql-linuxcon01 -d -h linuxsql01 mcr.microsoft.com/mssql/server:2017-latest
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=y0urSecUr3PAssw0rd' -p 5000:1433 --name sql-linuxcon02 -d -h linuxsql02 mcr.microsoft.com/mssql/server:2017-latest
+
+
+#Creating a user-defined Docker network
+#Step 1: Create a user-defined network named bridgenet1
+docker network create -d bridge --subnet 172.19.0.1/24 bridgenet1
+
+#Step 2: Run a container and attach it to bridgenet1
+docker run --network bridgenet1 -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=y0urSecUr3PAssw0rd' --ip="172.19.0.2" --name sqllinuxcon01 -d -h linuxsql01 mcr.microsoft.com/mssql/server:2017-latest
+
+#Step 3: Create a user-defined network named bridgenet2
+docker network create -d bridge --subnet 10.0.0.1/16 bridgenet2
+
+#Step 4: Run a container and attach it to bridgenet2
+docker run --network bridgenet2 -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=y0urSecUr3PAssw0rd' --ip="10.0.0.2" --name sqllinuxcon02 -d -h linuxsql02 mcr.microsoft.com/mssql/server:2017-latest

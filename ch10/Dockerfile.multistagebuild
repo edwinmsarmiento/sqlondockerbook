@@ -1,0 +1,33 @@
+#Step 1: Use the .NET Core with SDK on Linux image
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+
+#Step 2
+WORKDIR /app
+
+#Step 3: copy csproj and restore as distinct layers
+COPY belgrade-product-catalog-demo/*.csproj ./belgrade-productcatalog-demo/
+
+#Step 4
+RUN dotnet restore ./belgrade-product-catalog-demo/
+
+#Step 5 copy everything else and build app
+COPY belgrade-product-catalog-demo/. ./belgrade-product-catalogdemo/
+
+#Step 6
+WORKDIR /app/belgrade-product-catalog-demo
+RUN dotnet publish -c Release -o out
+
+#Step 7:
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
+
+#Step 8
+WORKDIR /app
+
+#Step 9
+COPY --from=build /app/belgrade-product-catalog-demo/out ./
+
+#Step 10
+EXPOSE 5000
+
+#Step 11
+ENTRYPOINT ["dotnet", "belgrade-product-catalog-demo.dll"]
