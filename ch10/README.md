@@ -1,4 +1,4 @@
-# 
+# Chapter 10: Creating Custom SQL Server on Linux Container Images
 
 This chapter covers creating a Dockerfile for building and deploying a custom SQL Server on Linux container image. 
 
